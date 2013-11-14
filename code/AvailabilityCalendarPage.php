@@ -177,11 +177,10 @@ class AvailabilityCalendarPage_Controller extends Page_Controller {
 		
 		$booked = $this->BookedData()->where("'".$actday."' BETWEEN `BookedData`.`dateStart` AND `BookedData`.`dateEnd`")->First();
 		
-		if($booked && $booked->exists()){	
-			$DepartureArrival = $this->BookedData()->where("'".$actday."' = `BookedData`.`dateStart` && '".$actday."' = `BookedData`.`dateEnd`"); // Arrival and Departure date the same check
+		if($booked && $booked->exists()){
 			$Arrival = $this->BookedData()->where("'".$actday."' = `BookedData`.`dateStart`"); // Arrival date check
 			$Departure = $this->BookedData()->where("'".$actday."' = `BookedData`.`dateEnd`"); // Departure date check
-			if($DepartureArrival && $DepartureArrival->exists()){	
+			if($Arrival && $Arrival->exists() && $Departure && $Departure->exists()){	
 				return "DepartureArrival";
 			}
 			elseif($Arrival && $Arrival->exists()){ 
