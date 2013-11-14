@@ -1,17 +1,25 @@
 <?php
 class AvailabilityCalendarPage extends Page {
 	
-	public static $db = array(
-	
+	private static $db = array(
+		'DisplayMonths' => 'Int'
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 	
 	);
 	
-	public static $has_many = array(
+	private static $has_many = array(
 		"BookedData" => "BookedData"
 	);
+	
+	private static $defaults = array(
+    	'DisplayMonths' => 12
+  	);
+	
+	public static $singular_name = 'Availability Calendar';
+ 	public static $plural_name = 'Availability Calendar';
+	public static $description = "Availability Calendar Page";
 	
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();	
@@ -51,7 +59,9 @@ class AvailabilityCalendarPage extends Page {
 			'dateStart' => "Date->Nice",
 			'dateEnd' => "Date->Nice"
 		));
-
+		
+		$fields->addFieldToTab("Root.Main", new DropdownField('DisplayMonths', 'Number of months to display', array('2'=>'2', '6'=>'6','12'=>'12','18'=>'18','24'=>'24','36'=>'36')));
+		
 		return $fields;
 	}
 }
@@ -69,7 +79,7 @@ class AvailabilityCalendarPage_Controller extends Page_Controller {
 		
 		$output = "";
 		
-		for($m=0; $m < 24; $m++) {
+		for($m=0; $m < $this->DisplayMonths; $m++) {
 			// Get today, reference day, first day and last day info
 			
 		    if (($year == 0) || ($month == 0)){
