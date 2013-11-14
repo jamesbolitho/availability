@@ -30,7 +30,7 @@ Installation
 
 2) Create a folder named availbility in the root of your website folder (i.e. the same level as cms and framework folders).
 
-3) Upload the files to your server and then run dev/build and yoursiteurl/?flush=all to update the templates.
+3) Upload the files to your server and then run dev/build and yoursiteurl/?flush=all to update the database and templates.
 
 You should then have access to a new Availability Calendar page type.
 
