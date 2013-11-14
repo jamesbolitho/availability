@@ -60,7 +60,7 @@ class AvailabilityCalendarPage extends Page {
 			'dateEnd' => "Date->Nice"
 		));
 		
-		$fields->addFieldToTab("Root.Main", new DropdownField('DisplayMonths', 'Number of months to display', array('2'=>'2', '6'=>'6','12'=>'12','18'=>'18','24'=>'24','36'=>'36')));
+		$fields->addFieldToTab("Root.Main", new DropdownField('DisplayMonths', 'Number of months to display', array('2'=>'2', '6'=>'6','12'=>'12','18'=>'18','24'=>'24','36'=>'36')), 'Content');
 		
 		return $fields;
 	}
@@ -171,24 +171,23 @@ class AvailabilityCalendarPage_Controller extends Page_Controller {
 		return $output;
 	}
 	
-	
-	
 	public function isBooked($year, $month, $day) {	
 		
 		$actday = $year.'-'.$month.'-'.$day;
 		
-		$AllDates = $this->BookedData();
+		$booked = $this->BookedData()->where("'".$actday."' BETWEEN `BookedData`.`dateStart` AND `BookedData`.`dateEnd`")->First();
 		
-		$booked = DB::query("SELECT `BookedData`.`ID` FROM `BookedData` WHERE '{$actday}' BETWEEN `BookedData`.`dateStart` AND `BookedData`.`dateEnd`")->value();
-		if($booked){
-			
-			if(DB::query("SELECT `BookedData`.`dateStart` FROM `BookedData` WHERE '{$actday}' = `BookedData`.`dateStart`")->value() && DB::query("SELECT `BookedData`.`dateEnd` FROM `BookedData` WHERE '{$actday}' = `BookedData`.`dateEnd`")->value()){ // Arrival and Departure date the same check
+		if($booked && $booked->exists()){	
+			$DepartureArrival = $this->BookedData()->where("'".$actday."' = `BookedData`.`dateStart` && '".$actday."' = `BookedData`.`dateEnd`"); // Arrival and Departure date the same check
+			$Arrival = $this->BookedData()->where("'".$actday."' = `BookedData`.`dateStart`"); // Arrival date check
+			$Departure = $this->BookedData()->where("'".$actday."' = `BookedData`.`dateEnd`"); // Departure date check
+			if($DepartureArrival && $DepartureArrival->exists()){	
 				return "DepartureArrival";
 			}
-			elseif(DB::query("SELECT `BookedData`.`dateStart` FROM `BookedData` WHERE '{$actday}' = `BookedData`.`dateStart`")->value()){ // Arrival date check
+			elseif($Arrival && $Arrival->exists()){ 
 				return "Arrival";
 			}
-			elseif(DB::query("SELECT `BookedData`.`dateEnd` FROM `BookedData` WHERE '{$actday}' = `BookedData`.`dateEnd`")->value()){ // Departure date check
+			elseif($Departure && $Departure->exists()){ 
 				return "Departure";
 			} 
 			else {
