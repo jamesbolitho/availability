@@ -19,7 +19,7 @@ SilverStripe 3.1
 Overview
 --------
 
-Updated from module created by Frank van der Hammen to work with Silverstripe 3.0.
+Updated from module created by Frank van der Hammen to work with Silverstripe 3.1.
 
 Provides a simple availability calendar for your website.
 
